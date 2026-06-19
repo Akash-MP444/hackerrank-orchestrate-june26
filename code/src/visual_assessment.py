@@ -110,7 +110,7 @@ async def assess_image(
     # should not be reused across two different claim_object contexts, since the
     # prompt's vocabulary hints (and therefore a model's best answer) differ by
     # claim_object even if the pixels happen to collide.
-    cache_key = f"{compute_bytes_hash(image_bytes)}::{claim_object}"
+    cache_key = f"{compute_bytes_hash(image_bytes)}_{claim_object}"
 
     if cache is not None:
         cached = cache.get(cache_key)

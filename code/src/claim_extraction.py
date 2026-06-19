@@ -80,7 +80,7 @@ async def extract_claim(
     `usage_info` is `{"input_tokens": int, "output_tokens": int, "attempts": int,
     "cache_hit": bool}` for cost/latency reporting in evaluation/run_eval.py.
     """
-    cache_key = compute_text_hash(f"{claim_object}::{user_claim_raw}")
+    cache_key = compute_text_hash(f"{claim_object}_{user_claim_raw}")
 
     if cache is not None:
         cached = cache.get(cache_key)

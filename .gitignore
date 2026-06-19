@@ -1,0 +1,10 @@
+.env
+*.env
+
+cache/
+code/cache/
+
+__pycache__/
+*.pyc
+
+run.log
