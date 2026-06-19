@@ -1,0 +1,85 @@
+# Suggested vocabulary for object parts and issue types, per claim_object.
+#
+# This file is NOT a hard validation gate. schemas.py deliberately models
+# `object_part` / `issue_type` as free-text strings (see the docstring at the top of
+# that file for why) because problem_statement.md — which would presumably contain the
+# authoritative enum lists — was not part of this upload. The lists below were built by
+# inspecting the 20 labeled rows of sample_claims.csv and evidence_requirements.csv's
+# `applies_to` column, then lightly extended with same-family terms evidence_
+# requirements.csv implies but sample_claims.csv doesn't happen to exemplify (e.g.
+# laptop "port"/"base", package "flap"/"label", car "fender"/"wheel"/"taillight").
+#
+# Used by:
+#   - utils.py, to render {allowed_object_parts} / {allowed_issue_types} into the
+#     Stage 3 visual-assessment prompt so the VLM has a vocabulary to anchor to.
+#   - decision_engine.py, for soft normalization (utils.normalize_token) when
+#     comparing claimed vs. observed object_part/issue_type — never for rejecting an
+#     unrecognized value outright.
+
+object_parts:
+  car:
+    - front_bumper
+    - rear_bumper
+    - door
+    - hood
+    - trunk
+    - roof
+    - fender
+    - windshield
+    - headlight
+    - taillight
+    - side_mirror
+    - wheel
+    - unknown
+  laptop:
+    - screen
+    - keyboard
+    - trackpad
+    - hinge
+    - lid
+    - corner
+    - body
+    - port
+    - base
+    - unknown
+  package:
+    - box
+    - package_corner
+    - package_side
+    - seal
+    - flap
+    - label
+    - contents
+    - unknown
+
+issue_types:
+  - dent
+  - scratch
+  - crack
+  - broken_part
+  - missing_part
+  - stain
+  - water_damage
+  - torn_packaging
+  - crushed_packaging
+  - missing_contents
+  - none
+  - unknown
+
+# Maps a normalized issue_type -> the closed IssueFamily used by Stage 2's SubClaim
+# and compared against in Stage 4 (schemas.IssueFamily). Anything not listed here
+# normalizes to "unclear" rather than raising, since the held-out test set is not
+# guaranteed to be limited to this list.
+issue_family_map:
+  dent: dent_or_scratch
+  scratch: dent_or_scratch
+  crack: crack_or_glass
+  broken_part: broken_or_missing_part
+  missing_part: broken_or_missing_part
+  stain: water_or_stain
+  water_damage: water_or_stain
+  torn_packaging: torn_or_crushed_packaging
+  crushed_packaging: torn_or_crushed_packaging
+  missing_contents: missing_contents
+  none: unclear
+  unknown: unclear
